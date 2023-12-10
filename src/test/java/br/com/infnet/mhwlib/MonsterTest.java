@@ -74,4 +74,13 @@ public class MonsterTest {
             monstroInexistente.getById(-100L);
         });
     }
+
+    @Test
+    @DisplayName("deve testar o retorno do total de paginas")
+    public void testaGetTotalPaginas(){
+        int totalPaginas = monsterUtil.getTotalPaginas(20, 60);
+        assertEquals(3, totalPaginas);
+        totalPaginas = monsterUtil.getTotalPaginas(20, 58);
+        assertEquals(3, totalPaginas);
+    }
 }

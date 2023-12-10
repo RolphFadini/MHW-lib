@@ -87,8 +87,7 @@ public class MonsterUtil {
        if(!monsters.containsKey(id)) {
            throw new ResourceNotFoundException("Monstro Inexistente");
        }
-       MonsterFormatted removedMonster = monsters.remove(id);
-       return removedMonster;
+        return monsters.remove(id);
     }
 
     public MonsterFormatted createNewMonster(String name, String species, List<Weaknesses> weaknesses) {
@@ -119,9 +118,21 @@ public class MonsterUtil {
         return newMonster;
     }
 
-    public List<MonsterFormatted> getAll(Integer size) {
-        List<MonsterFormatted> monsterList = monsters.values().stream().toList();
-        List<MonsterFormatted> subsizedMonsterList = monsterList.subList(0, size);
-        return subsizedMonsterList;
+    public int getTotalPaginas(int size, int totalRegistros){
+        double totalDePaginas = (double)totalRegistros / (double)size;
+        return (int)Math.ceil(totalDePaginas);
+    }
+
+    public int getTotalPaginas(int size){
+        double totalSize = getSize();
+        double totalDePaginas = totalSize / (double)size;
+        return (int)Math.ceil(totalDePaginas);
+    }
+
+    public List<MonsterFormatted> getByPageAndSize(int page, int size){
+        List<MonsterFormatted> monsters = getAll();
+        int start = (page - 1) * size;
+        int end = Math.min(start + size, monsters.size());
+        return monsters.subList(start, end);
     }
 }

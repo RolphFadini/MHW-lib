@@ -4,8 +4,10 @@ import br.com.infnet.mhwlib.exception.ResourceNotFoundException;
 import br.com.infnet.mhwlib.model.MonsterFormatted;
 import br.com.infnet.mhwlib.model.Weaknesses;
 import br.com.infnet.mhwlib.model.payload.ResponsePayload;
+import br.com.infnet.mhwlib.util.HttpUtil;
 import br.com.infnet.mhwlib.util.MonsterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +19,16 @@ import java.util.List;
 public class MonsterController {
     @Autowired
     MonsterUtil monsterUtil;
+    @Autowired
+    HttpUtil httpUtil;
 
     @GetMapping
-    public List<MonsterFormatted> getAll(@RequestParam(required = false, defaultValue = "58") Integer size){
-        return monsterUtil.getAll(size);
+    public ResponseEntity getAll(@RequestParam(required = false, defaultValue = "58") Integer size,
+                                 @RequestParam(required = false, defaultValue = "1") int page){
+
+        List<MonsterFormatted> monsters = monsterUtil.getByPageAndSize(page, size);
+        HttpHeaders httpHeaders = httpUtil.getHttpHeaders(size, page);
+        return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(monsters);
     }
 
     @GetMapping("/{id}")
@@ -50,9 +58,7 @@ public class MonsterController {
         String name = monsterFormatted.getName();
         String species = monsterFormatted.getSpecies();
         List<Weaknesses> weaknesses = monsterFormatted.getWeaknesses();
-        MonsterFormatted createdMonster = monsterUtil.createNewMonster(name, species, weaknesses);
-
-        return createdMonster;
+        return monsterUtil.createNewMonster(name, species, weaknesses);
     }
 
     @PutMapping("/{id}")
