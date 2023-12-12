@@ -16,7 +16,7 @@
 ##
 
 # Get All Monsters
-#### - Esse endpoint retorna todos os monstros
+- #### Esse endpoint retorna todos os monstros
 #### Possíveis parâmetros: 
 > size (determina a quantidade de monstros retornados),<br>
 > page (determina em que página da lista de todos os monstros estamos)
